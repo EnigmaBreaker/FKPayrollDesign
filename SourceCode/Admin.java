@@ -13,20 +13,26 @@ import java.io.Writer;
 import java.io.FileWriter;
 
 interface AdminInterface {
-	public void addEmployee();
+	public int addEmployee();
 	public void deleteEmployee(int employeeID);
+	public int addUnion();
+	public void deleteUnion(int unionID);
 	public void loadEmployees();
 	public void dumpEmployees();
 	public void loadTimeCard();
 	public void dumpTimeCard();
 	public void loadSalesReceipt();
 	public void dumpSalesReceipt();
+	public void loadUnion();
+	public void dumpUnion();
 }
 
 class Admin implements AdminInterface{
 	public ArrayList<Employee> employees = new ArrayList<>();
 	public ArrayList<TimeCard> timecards = new ArrayList<>();
 	public ArrayList<SalesReceipt> salesreceipts = new ArrayList<>();
+	public ArrayList<Union> unions = new ArrayList<>();
+
 	
 	public Admin(){
 		this.loadEmployees();
@@ -60,7 +66,18 @@ class Admin implements AdminInterface{
 		}
 	}
 
-	public void addEmployee(){
+	public int addUnion(){
+		Scanner sc = new Scanner(System.in);
+		System.out.print("[@] Name: ");
+		String name = sc.nextLine();
+		System.out.print("[@] Min Amount: ");
+		Double amount = sc.nextDouble();
+		Union un = new Union(name, amount);
+		this.unions.add(un);
+		return un.getID();
+	}
+
+	public int addEmployee(){
 		Scanner sc = new Scanner(System.in);
 		System.out.print("[@] Name: ");
 		String name = sc.nextLine();
@@ -92,6 +109,7 @@ class Admin implements AdminInterface{
 
 		Employee emp = new Employee(name, salary, hourlyRate, commissionRate, address, paymentType);
 		employees.add(emp);
+		return emp.getID();
 	}
 
 	public void deleteEmployee(int employeeId){
@@ -111,6 +129,27 @@ class Admin implements AdminInterface{
 		}
 		this.employees = newones;
 	}
+
+	public void deleteUnion(int unionID){
+		ArrayList<Union> unions = new ArrayList<>();
+		ArrayList<Union> newones = new ArrayList<>();
+		readFromFile("Database/union.json", unions);
+		for (int i=0; i<unions.size(); i++){
+			Gson gson = new GsonBuilder().create();
+			String json = gson.toJson(unions.get(i));
+			Union temp = gson.fromJson(json, Union.class);
+			if(temp.getID() != unionID){
+				newones.add(temp);
+			}
+			else{
+				break;
+			}
+		}
+		this.unions = newones;
+	}
+
+
+
 	public void loadEmployees(){
 		ArrayList<Employee> arr = new ArrayList<>();
 		readFromFile("Database/emp.json", arr);
@@ -121,7 +160,7 @@ class Admin implements AdminInterface{
 			employees.add(temp);
 		} 
 	}
-	public void loadSalesReceipt(){
+	public void loadTimeCard(){
 		ArrayList<TimeCard> arr = new ArrayList<>();
 		readFromFile("Database/timecards.json", arr);
 		for (int i=0; i<arr.size(); i++){
@@ -132,7 +171,7 @@ class Admin implements AdminInterface{
 		} 
 	}
 
-	public void loadTimeCard(){
+	public void loadSalesReceipt(){
 		ArrayList<SalesReceipt> arr = new ArrayList<>();
 		readFromFile("Database/salesreceipts.json", arr);
 		for (int i=0; i<arr.size(); i++){
@@ -140,6 +179,17 @@ class Admin implements AdminInterface{
 			String json = gson.toJson(arr.get(i));
 			SalesReceipt temp = gson.fromJson(json, SalesReceipt.class);
 			salesreceipts.add(temp);
+		} 
+	}	
+
+	public void loadUnion(){
+		ArrayList<Union> arr = new ArrayList<>();
+		readFromFile("Database/union.json", arr);
+		for (int i=0; i<arr.size(); i++){
+			Gson gson = new GsonBuilder().create();
+			String json = gson.toJson(arr.get(i));
+			Union temp = gson.fromJson(json, Union.class);
+			unions.add(temp);
 		} 
 	}
 
@@ -151,6 +201,9 @@ class Admin implements AdminInterface{
 	}
 	public void dumpSalesReceipt(){
 		writeToFile("Database/salesreceipts.json", salesreceipts);
+	}
+	public void dumpUnion(){
+		writeToFile("Database/union.json", unions);
 	}
 
 	public static void main(String[] args) {

@@ -24,7 +24,7 @@ class Union{
 		this.members = new ArrayList<>();
 		this.donations = new ArrayList<>();
 	}
-	public Union(String name, int membershipfees){
+	public Union(String name, double membershipfees){
 		this();
 		this.name = name;
 		this.membershipfees = membershipfees;
