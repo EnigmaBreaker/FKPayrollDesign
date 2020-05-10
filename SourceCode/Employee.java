@@ -1,7 +1,7 @@
 package projectPayroll;
 
 import java.time.LocalDate;
-// import projectPayroll.PaymentType;
+import com.google.gson.*;
 
 interface EmployeeInterface {
 	public int getID();
@@ -39,14 +39,25 @@ class Employee implements EmployeeInterface {
 		this.joiningDate = LocalDate.now();
 		this.paymentStartDate = LocalDate.now();
 	}
-
-	public Employee(String name, double salary, double hourlyRate, double commissionRate, String address){
+	public Employee(String name, double salary, double hourlyRate, double commissionRate, String address, PaymentType paymentType){
 		this();
 		this.name = name;
 		this.salary = salary;
 		this.hourlyRate = hourlyRate;
 		this.commissionRate = commissionRate;
 		this.address = address;
+		this.paymentType = paymentType;
+	}
+
+	// public Employee createAgain(String json){
+	// 	Gson gson = new Gson();
+	// 	Employee obj = gson.fromJson(json, Employee.class);
+	// 	return obj;
+	// }
+
+	public String jsonDump(){
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		return gson.toJson(this);
 	}
 
 	public int getID(){
@@ -85,11 +96,17 @@ class Employee implements EmployeeInterface {
 	public void setAddress(String address){
 		this.address = address;
 	}
-
 	public PaymentType getPaymentType() {
 		return this.paymentType;
 	}
 	public void setPaymentType(PaymentType ptype){
 		this.paymentType = ptype;
+	}
+	public static void main(String[] args){
+		Employee emp = new Employee("asdf", 100, 100, 10, "ASdsdf", PaymentType.Pickup);
+		String json = emp.jsonDump();
+		// Employee newone = emp.createAgain(json);
+		// String js = emp.jsonDump();
+		// System.out.println(js);
 	}
 }
