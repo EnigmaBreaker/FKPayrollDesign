@@ -30,6 +30,7 @@ class Admin implements AdminInterface{
 		this.loadEmployees();
 		this.loadTimeCard();
 		this.loadSalesReceipt();
+		Employee.setLastId(this.employees.get(this.employees.size() - 1).getID());
 	}
 	public static <E> void readFromFile(String file, ArrayList<E> arr){
 		try {

@@ -61,6 +61,9 @@ class Employee implements EmployeeInterface {
 		this.address = address;
 		this.paymentType = paymentType;
 	}
+	public static void setLastId(int id){
+		lastId = id;
+	}
 
 	public void startTime(){
 		this.timeCard = new TimeCard(this.identity);
