@@ -17,10 +17,18 @@ interface AdminInterface {
 	public void deleteEmployee(int employeeID);
 	public void loadEmployees();
 	public void dumpEmployees();
+	public void loadTimeCard();
+	public void dumpTimeCard();
 }
 
 class Admin implements AdminInterface{
-	private ArrayList<Employee> employees = new ArrayList<>();
+	public ArrayList<Employee> employees = new ArrayList<>();
+	public ArrayList<TimeCard> timecards = new ArrayList<>();
+	
+	public Admin(){
+		this.loadEmployees();
+		this.loadTimeCard();
+	}
 	public static <E> void readFromFile(String file, ArrayList<E> arr){
 		try {
 		    Gson gson = new Gson();
@@ -39,7 +47,7 @@ class Admin implements AdminInterface{
 
 	public static <E> void writeToFile(String file, ArrayList<E> arr){
 		try (Writer writer = new FileWriter(file)){
-			Gson gson = new GsonBuilder().create();
+			Gson gson = new GsonBuilder().serializeNulls().create();
 			gson.toJson(arr, writer);
 		}
 		catch (Exception ex){
@@ -78,10 +86,6 @@ class Admin implements AdminInterface{
 		}
 
 		Employee emp = new Employee(name, salary, hourlyRate, commissionRate, address, paymentType);
-		// ArrayList<Employee> arr = new ArrayList<>();
-		// readFromFile("Database/emp.json", arr);
-		// arr.add(emp);
-		// writeToFile("Database/emp.json", arr);
 		employees.add(emp);
 	}
 
@@ -100,7 +104,7 @@ class Admin implements AdminInterface{
 				break;
 			}
 		}
-		writeToFile("Database/emp.json", newones);
+		this.employees = newones;
 	}
 	public void loadEmployees(){
 		ArrayList<Employee> arr = new ArrayList<>();
@@ -112,14 +116,32 @@ class Admin implements AdminInterface{
 			employees.add(temp);
 		} 
 	}
+	public void loadTimeCard(){
+		ArrayList<TimeCard> arr = new ArrayList<>();
+		readFromFile("Database/timecards.json", arr);
+		for (int i=0; i<arr.size(); i++){
+			Gson gson = new GsonBuilder().create();
+			String json = gson.toJson(arr.get(i));
+			TimeCard temp = gson.fromJson(json, TimeCard.class);
+			timecards.add(temp);
+		} 
+	}
 	public void dumpEmployees(){
 		writeToFile("Database/emp.json", employees);
+	}
+	public void dumpTimeCard(){
+		writeToFile("Database/timecards.json", timecards);
 	}
 
 	public static void main(String[] args) {
 		Admin admin = new Admin();
-		admin.loadEmployees();
 		admin.addEmployee();
+		admin.employees.get(0).startTime();
+		TimeCard newone = admin.employees.get(0).submitTimeCard();
+		admin.timecards.add(newone);
+		admin.dumpTimeCard();
 		admin.dumpEmployees();
+		// admin.deleteEmployee(1);
+		// admin.dumpEmployees();
 	}
 }

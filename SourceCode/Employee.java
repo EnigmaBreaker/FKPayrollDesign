@@ -2,6 +2,18 @@ package projectPayroll;
 
 import java.time.LocalDate;
 import com.google.gson.*;
+import java.util.Scanner;
+import java.io.Reader;
+import java.util.ArrayList;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import com.google.gson.reflect.TypeToken;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.Writer;
+import java.io.FileWriter;
 
 interface EmployeeInterface {
 	public String getName();
@@ -32,6 +44,7 @@ class Employee implements EmployeeInterface {
 	private LocalDate paymentStartDate;
 	private static int lastId = 0;
 	private PaymentType paymentType;
+	private TimeCard timeCard = null;
 	private Employee(){
 		lastId++;
 		this.identity = lastId;
@@ -49,11 +62,16 @@ class Employee implements EmployeeInterface {
 		this.paymentType = paymentType;
 	}
 
-	// public Employee createAgain(String json){
-	// 	Gson gson = new Gson();
-	// 	Employee obj = gson.fromJson(json, Employee.class);
-	// 	return obj;
-	// }
+	public void startTime(){
+		this.timeCard = new TimeCard(this.identity);
+	}
+	public void endTime(){
+		this.timeCard.setEndTime();
+	}
+	public TimeCard submitTimeCard(){
+		this.timeCard.setEndTime();
+		return this.timeCard;
+	}
 
 	public String jsonDump(){
 		Gson gson = new GsonBuilder().serializeNulls().create();
@@ -105,8 +123,5 @@ class Employee implements EmployeeInterface {
 	public static void main(String[] args){
 		Employee emp = new Employee("asdf", 100, 100, 10, "ASdsdf", PaymentType.Pickup);
 		String json = emp.jsonDump();
-		// Employee newone = emp.createAgain(json);
-		// String js = emp.jsonDump();
-		// System.out.println(js);
 	}
 }

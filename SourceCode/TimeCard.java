@@ -7,14 +7,16 @@ class TimeCard{
 	private LocalTime startTime;
 	private LocalTime endTime;
 	private LocalDate date;
+	private int employeeID;
 
-	public TimeCard(){
+	public TimeCard(int employeeID){
 		this.startTime = LocalTime.now();
 		this.date = LocalDate.now();
 		this.endTime = null;
+		this.employeeID = employeeID;
 	}
 	public void setEndTime(){
-		if(endTime != null){
+		if(endTime == null){
 			this.endTime = LocalTime.now();
 		}
 	}
