@@ -12,8 +12,12 @@ import java.nio.file.Paths;
 import java.io.Writer;
 import java.io.FileWriter;
 
+interface AdminInterface {
+	public void addEmployee();
+	public void deleteEmployee(int employeeID);
+}
 
-class Admin{
+class Admin implements AdminInterface{
 	public static ArrayList<Employee> readFromFile(String file){
 		ArrayList<Employee> employees = new ArrayList<Employee>();
 		try {
@@ -41,7 +45,7 @@ class Admin{
 		}
 	}
 
-	public static void addEmployee(){
+	public void addEmployee(){
 		Scanner sc = new Scanner(System.in);
 		System.out.print("[@] Name: ");
 		String name = sc.nextLine();
@@ -76,7 +80,21 @@ class Admin{
 		arr.add(emp);
 		writeToFile("Database/emp.json", arr);
 	}
+
+	public void deleteEmployee(int employeeId){
+		ArrayList<Employee> employees = readFromFile("Database/emp.json");
+		for (int i=0; i<employees.size(); i++){
+			if(employees.get(i).getID() == employeeId){
+				employees.remove(i);
+				writeToFile("Database/emp.json", employees);
+				break;
+			}
+		}
+	}
+
 	public static void main(String[] args) {
-		addEmployee();
+		Admin admin = new Admin();
+		admin.addEmployee();
+		admin.deleteEmployee(1);
 	}
 }
