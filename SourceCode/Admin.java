@@ -15,9 +15,12 @@ import java.io.FileWriter;
 interface AdminInterface {
 	public void addEmployee();
 	public void deleteEmployee(int employeeID);
+	public void loadEmployees();
+	public void dumpEmployees();
 }
 
 class Admin implements AdminInterface{
+	private ArrayList<Employee> employees = new ArrayList<>();
 	public static <E> void readFromFile(String file, ArrayList<E> arr){
 		try {
 		    Gson gson = new Gson();
@@ -75,10 +78,11 @@ class Admin implements AdminInterface{
 		}
 
 		Employee emp = new Employee(name, salary, hourlyRate, commissionRate, address, paymentType);
-		ArrayList<Employee> arr = new ArrayList<>();
-		readFromFile("Database/emp.json", arr);
-		arr.add(emp);
-		writeToFile("Database/emp.json", arr);
+		// ArrayList<Employee> arr = new ArrayList<>();
+		// readFromFile("Database/emp.json", arr);
+		// arr.add(emp);
+		// writeToFile("Database/emp.json", arr);
+		employees.add(emp);
 	}
 
 	public void deleteEmployee(int employeeId){
@@ -98,9 +102,24 @@ class Admin implements AdminInterface{
 		}
 		writeToFile("Database/emp.json", newones);
 	}
+	public void loadEmployees(){
+		ArrayList<Employee> arr = new ArrayList<>();
+		readFromFile("Database/emp.json", arr);
+		for (int i=0; i<arr.size(); i++){
+			Gson gson = new GsonBuilder().create();
+			String json = gson.toJson(arr.get(i));
+			Employee temp = gson.fromJson(json, Employee.class);
+			employees.add(temp);
+		} 
+	}
+	public void dumpEmployees(){
+		writeToFile("Database/emp.json", employees);
+	}
 
 	public static void main(String[] args) {
 		Admin admin = new Admin();
+		admin.loadEmployees();
 		admin.addEmployee();
+		admin.dumpEmployees();
 	}
 }
