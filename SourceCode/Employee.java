@@ -73,6 +73,11 @@ class Employee implements EmployeeInterface {
 		return this.timeCard;
 	}
 
+	public SalesReceipt submitSalesReceipt(double amount){
+		SalesReceipt receipt = new SalesReceipt(amount, this.identity);
+		return receipt;
+	}
+
 	public String jsonDump(){
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		return gson.toJson(this);
