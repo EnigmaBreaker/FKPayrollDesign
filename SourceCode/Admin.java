@@ -118,7 +118,7 @@ class Admin implements AdminInterface{
 			employees.add(temp);
 		} 
 	}
-	public void loadTimeCard(){
+	public void loadSalesReceipt(){
 		ArrayList<TimeCard> arr = new ArrayList<>();
 		readFromFile("Database/timecards.json", arr);
 		for (int i=0; i<arr.size(); i++){
@@ -154,9 +154,9 @@ class Admin implements AdminInterface{
 		Admin admin = new Admin();
 		admin.addEmployee();
 		admin.employees.get(0).startTime();
-		TimeCard newone = admin.employees.get(0).submitTimeCard();
-		admin.timecards.add(newone);
-		admin.dumpTimeCard();
+		SalesReceipt newone = admin.employees.get(0).submitSalesReceipt(1000);
+		admin.salesreceipts.add(newone);
+		admin.dumpSalesReceipt();
 		admin.dumpEmployees();
 		// admin.deleteEmployee(1);
 		// admin.dumpEmployees();
