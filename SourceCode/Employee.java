@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import com.google.gson.*;
 
 interface EmployeeInterface {
-	public int getID();
 	public String getName();
+	public int getID();
 	public double getSalary();
 	public void setSalary(double salary);
 	public double getHourlyRate();
