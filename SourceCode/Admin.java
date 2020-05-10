@@ -24,10 +24,12 @@ interface AdminInterface {
 class Admin implements AdminInterface{
 	public ArrayList<Employee> employees = new ArrayList<>();
 	public ArrayList<TimeCard> timecards = new ArrayList<>();
+	public ArrayList<SalesReceipt> salesreceipts = new ArrayList<>();
 	
 	public Admin(){
 		this.loadEmployees();
 		this.loadTimeCard();
+		this.loadSalesReceipt();
 	}
 	public static <E> void readFromFile(String file, ArrayList<E> arr){
 		try {
@@ -126,11 +128,26 @@ class Admin implements AdminInterface{
 			timecards.add(temp);
 		} 
 	}
+
+	public void loadTimeCard(){
+		ArrayList<SalesReceipt> arr = new ArrayList<>();
+		readFromFile("Database/salesreceipts.json", arr);
+		for (int i=0; i<arr.size(); i++){
+			Gson gson = new GsonBuilder().create();
+			String json = gson.toJson(arr.get(i));
+			SalesReceipt temp = gson.fromJson(json, SalesReceipt.class);
+			salesreceipts.add(temp);
+		} 
+	}
+
 	public void dumpEmployees(){
 		writeToFile("Database/emp.json", employees);
 	}
 	public void dumpTimeCard(){
 		writeToFile("Database/timecards.json", timecards);
+	}
+	public void dumpSalesReceipt(){
+		writeToFile("Database/salesreceipts.json", salesreceipts);
 	}
 
 	public static void main(String[] args) {
