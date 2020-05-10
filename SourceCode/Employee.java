@@ -45,12 +45,16 @@ class Employee implements EmployeeInterface {
 	private static int lastId = 0;
 	private PaymentType paymentType;
 	private TimeCard timeCard = null;
+	private ArrayList<Integer> unions;
+	private ArrayList<Double> donations;
 	private Employee(){
 		lastId++;
 		this.identity = lastId;
 		this.dueAmount = 0;
 		this.joiningDate = LocalDate.now();
 		this.paymentStartDate = LocalDate.now();
+		this.unions = new ArrayList<>();
+		this.donations = new ArrayList<>();
 	}
 	public Employee(String name, double salary, double hourlyRate, double commissionRate, String address, PaymentType paymentType){
 		this();
@@ -68,9 +72,24 @@ class Employee implements EmployeeInterface {
 	public void startTime(){
 		this.timeCard = new TimeCard(this.identity);
 	}
+
 	public void endTime(){
 		this.timeCard.setEndTime();
 	}
+
+	public void joinUnion(int unionId, double amount){
+		this.unions.add(unionId);
+		this.donations.add(amount);
+	}
+
+	public void leaveUnion(int unionId){
+		int ind = this.unions.indexOf(unionId);
+		if(ind != -1){
+			this.unions.remove(ind);
+			this.donations.remove(ind);
+		}
+	}
+
 	public TimeCard submitTimeCard(){
 		this.timeCard.setEndTime();
 		return this.timeCard;

@@ -19,6 +19,8 @@ interface AdminInterface {
 	public void dumpEmployees();
 	public void loadTimeCard();
 	public void dumpTimeCard();
+	public void loadSalesReceipt();
+	public void dumpSalesReceipt();
 }
 
 class Admin implements AdminInterface{
