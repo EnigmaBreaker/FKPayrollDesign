@@ -18,27 +18,26 @@ interface AdminInterface {
 }
 
 class Admin implements AdminInterface{
-	public static ArrayList<Employee> readFromFile(String file){
-		ArrayList<Employee> employees = new ArrayList<Employee>();
+	public static <E> void readFromFile(String file, ArrayList<E> arr){
 		try {
 		    Gson gson = new Gson();
 		    Reader reader = Files.newBufferedReader(Paths.get(file));
 
-		    // convert JSON array to list of users
-		    employees = new Gson().fromJson(reader, new TypeToken<ArrayList<Employee>>() {}.getType());
+		    ArrayList<E> temp = new Gson().fromJson(reader, new TypeToken<ArrayList<E>>() {}.getType());
 		    reader.close();
-		    return employees;
-
-		} catch (Exception ex) {
+		    for (int i=0; i<temp.size(); i++){
+		    	arr.add(temp.get(i));
+		    }
+		} 
+		catch (Exception ex) {
 		    ex.printStackTrace();
 		}
-		return employees;
 	}
 
-	public static void writeToFile(String file, ArrayList<Employee> employees){
+	public static <E> void writeToFile(String file, ArrayList<E> arr){
 		try (Writer writer = new FileWriter(file)){
 			Gson gson = new GsonBuilder().create();
-			gson.toJson(employees, writer);
+			gson.toJson(arr, writer);
 		}
 		catch (Exception ex){
 			ex.printStackTrace();
@@ -76,25 +75,32 @@ class Admin implements AdminInterface{
 		}
 
 		Employee emp = new Employee(name, salary, hourlyRate, commissionRate, address, paymentType);
-		ArrayList<Employee> arr = readFromFile("Database/emp.json");
+		ArrayList<Employee> arr = new ArrayList<>();
+		readFromFile("Database/emp.json", arr);
 		arr.add(emp);
 		writeToFile("Database/emp.json", arr);
 	}
 
 	public void deleteEmployee(int employeeId){
-		ArrayList<Employee> employees = readFromFile("Database/emp.json");
+		ArrayList<Employee> employees = new ArrayList<>();
+		ArrayList<Employee> newones = new ArrayList<>();
+		readFromFile("Database/emp.json", employees);
 		for (int i=0; i<employees.size(); i++){
-			if(employees.get(i).getID() == employeeId){
-				employees.remove(i);
-				writeToFile("Database/emp.json", employees);
+			Gson gson = new GsonBuilder().create();
+			String json = gson.toJson(employees.get(i));
+			Employee temp = gson.fromJson(json, Employee.class);
+			if(temp.getID() != employeeId){
+				newones.add(temp);
+			}
+			else{
 				break;
 			}
 		}
+		writeToFile("Database/emp.json", newones);
 	}
 
 	public static void main(String[] args) {
 		Admin admin = new Admin();
 		admin.addEmployee();
-		admin.deleteEmployee(1);
 	}
 }
