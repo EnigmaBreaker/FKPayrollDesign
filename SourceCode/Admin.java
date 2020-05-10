@@ -128,6 +128,10 @@ class Admin implements AdminInterface{
 			}
 		}
 		this.employees = newones;
+
+		for (int i=0; i<unions.size(); i++){
+			unions.get(i).removeMember(employeeId);
+		}
 	}
 
 	public void deleteUnion(int unionID){
@@ -144,6 +148,9 @@ class Admin implements AdminInterface{
 			else{
 				break;
 			}
+		}
+		for (int i=0; i<employees.size(); i++){
+			employees.get(i).leaveUnion(unionID);
 		}
 		this.unions = newones;
 	}
