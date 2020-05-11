@@ -3,9 +3,9 @@ package projectPayroll;
 import java.time.LocalDate;
 
 class SalesReceipt {
-	LocalDate date;
-	double amount;
-	int employeeId;
+	private LocalDate date;
+	private double amount;
+	private int employeeId;
 
 	public SalesReceipt(double amount, int employeeId){
 		this.date = LocalDate.now();
